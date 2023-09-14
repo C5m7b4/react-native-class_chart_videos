@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Dimensions} from 'react-native';
+import {View, Text, Dimensions} from 'react-native';
 import Svg, {
   G,
   Rect,
@@ -217,6 +217,7 @@ class BasicChart<T, K> extends React.Component<
     containerHeight: number,
     containerWidth: number,
     x_axis_config: AxisConfig,
+    x_label_renderer?: (item: T) => React.ReactNode,
   ) {
     const {gap_between_ticks} = this.calculateWidth(containerWidth);
     const {
@@ -240,7 +241,9 @@ class BasicChart<T, K> extends React.Component<
             fontWeight={fontWeight}
             fontSize={fontSize}
             fill={fontColor}>
-            {item[this.state.x_key] as React.ReactNode}
+            {x_label_renderer
+              ? x_label_renderer(item)
+              : (item[this.state.x_key] as React.ReactNode)}
           </SvgText>
         </G>
       );
@@ -271,7 +274,11 @@ class BasicChart<T, K> extends React.Component<
     });
   }
 
-  render_y_axis_labels(containerHeight: number, y_axis_config: AxisConfig) {
+  render_y_axis_labels(
+    containerHeight: number,
+    y_axis_config: AxisConfig,
+    y_label_renderer?: (item: string) => React.ReactNode,
+  ) {
     const {gap_between_ticks, min, yMax} =
       this.calculateHeight(containerHeight);
     const {
@@ -298,7 +305,9 @@ class BasicChart<T, K> extends React.Component<
             fontWeight={fontWeight}
             fontSize={fontSize}
             fill={fontColor}>
-            {textValue}
+            {y_label_renderer
+              ? y_label_renderer(textValue.toString())
+              : textValue}
           </SvgText>
         </G>
       );
@@ -376,6 +385,8 @@ class BasicChart<T, K> extends React.Component<
       horizontalLineOpacity = 0.1,
       showVerticalLines = true,
       verticalLineOpacity = 0.1,
+      x_label_renderer,
+      y_label_renderer,
       gradient_background_config = {
         x1: 0,
         y1: 0,
@@ -460,6 +471,7 @@ class BasicChart<T, K> extends React.Component<
               containerHeight,
               containerWidth,
               x_axis_config,
+              x_label_renderer,
             )}
           {this.state.data &&
             this.state.data.length > 0 &&
@@ -470,7 +482,11 @@ class BasicChart<T, K> extends React.Component<
             )}
           {this.state.data &&
             this.state.data.length > 0 &&
-            this.render_y_axis_labels(containerHeight, y_axis_config)}
+            this.render_y_axis_labels(
+              containerHeight,
+              y_axis_config,
+              y_label_renderer,
+            )}
           {this.state.data &&
             this.state.data.length > 0 &&
             showHorizontalLines &&

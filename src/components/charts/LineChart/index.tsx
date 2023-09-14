@@ -138,7 +138,7 @@ class LineChart<T> extends BasicChart<T, LineChartProps> {
       let y =
         (yMax - (item[this.state.y_key] as number)) * (y_gap / y_value_gap) +
         this.state.y_margin;
-      if (index == this.state.data.length - 1) {
+      if (index === this.state.data.length - 1) {
         lastX = x;
         lastY = y;
       }
@@ -250,6 +250,8 @@ class LineChart<T> extends BasicChart<T, LineChartProps> {
       lineStroke = 'purple',
       curve = true,
       useLineShadow = true,
+      x_label_renderer,
+      y_label_renderer,
       gradient_background_config = {
         x1: 0,
         y1: 0,
@@ -348,6 +350,7 @@ class LineChart<T> extends BasicChart<T, LineChartProps> {
               containerHeight,
               containerWidth,
               x_axis_config,
+              x_label_renderer,
             )}
           {this.state.data &&
             this.state.data.length > 0 &&
@@ -358,7 +361,11 @@ class LineChart<T> extends BasicChart<T, LineChartProps> {
             )}
           {this.state.data &&
             this.state.data.length > 0 &&
-            this.render_y_axis_labels(containerHeight, y_axis_config)}
+            this.render_y_axis_labels(
+              containerHeight,
+              y_axis_config,
+              y_label_renderer,
+            )}
           {this.state.data &&
             this.state.data.length > 0 &&
             this.render_line_circles(

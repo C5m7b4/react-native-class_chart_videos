@@ -50,6 +50,8 @@ export type BasicChartProps<T, K> = K & {
   horizontalLineOpacity?: number;
   showVerticalLines?: boolean;
   verticalLineOpacity?: number;
+  x_label_renderer?: (item: T) => React.ReactNode;
+  y_label_renderer?: (item: string) => React.ReactNode;
 };
 
 export type BasicChartState<T> = {
